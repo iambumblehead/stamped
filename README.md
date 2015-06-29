@@ -61,7 +61,7 @@ Stamps are only applied to one 'active' project at a time. By default the last p
 
 ```elisp
 (stamped-proj-set-name "myproject")
-``
+```
 
 Convenience functions are available for active projects:
 
