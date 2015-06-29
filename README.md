@@ -76,9 +76,9 @@ Key-commands for these may are created with something like the following added t
 (global-set-key (kbd "C-c o") (lambda() (interactive) (stamped-proj-node-start)))
 ```
 
-
 [4]: https://github.com/rejeep/f.el                        "f.el"
 [5]: https://malpa.org                                    "MELPA"
+
 
 ---------------------------------------------------------
 #### <a id="license">License:
