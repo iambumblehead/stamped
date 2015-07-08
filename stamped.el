@@ -22,3 +22,15 @@
 (defun stamped-project (name)
   (interactive "sstamped project name: ")
   (setq *STAMPED-PROJ* name))
+
+(defun stamped-node-start ()
+  (interactive)
+  (stamped-proj-node-start (stamped-proj-get-name)))
+
+(defun stamped-node-test ()
+  (interactive)
+  (stamped-proj-node-test (stamped-proj-get-name)))
+
+(defun stamped-tail-log ()
+  (interactive)
+  (stamped-proj-tail-log (stamped-proj-get-name)))

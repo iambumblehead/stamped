@@ -65,15 +65,15 @@ Stamps are only applied to one 'active' project at a time. By default the last p
 
 Convenience functions are available for active projects:
 
- * `M-x stamped-proj-tail-log`, open a buffer tailing the log file
- * `M-x stamped-proj-node-start`, call `npm start` at the root-dir in a new buffer
- * `M-x stamped-proj-node-test`, call `npm test` at the root-dir in a new buffer
+ * `M-x stamped-tail-log`, open a buffer tailing the log file
+ * `M-x stamped-node-start`, call `npm start` at the root-dir in a new buffer
+ * `M-x stamped-node-test`, call `npm test` at the root-dir in a new buffer
 
 
 Key-commands for these may are created with something like the following added to *.emacs*:
 
 ```elisp
-(global-set-key (kbd "C-c o") (lambda() (interactive) (stamped-proj-node-start)))
+(global-set-key (kbd "C-c t") 'stamped-node-test)
 ```
 
 [4]: https://github.com/rejeep/f.el                        "f.el"
