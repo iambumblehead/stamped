@@ -3,6 +3,7 @@
 (defvar *STAMPED-PROJ-config* (make-hash-table :test 'equal))
 (defvar *STAMPED-PROJ-root-dir* (make-hash-table :test 'equal))
 (defvar *STAMPED-PROJ-log-dir* (make-hash-table :test 'equal))
+(defvar *STAMPED-PROJ-on-update* (make-hash-table :test 'equal))
 (defvar *STAMPED-PROJ-st-author* (make-hash-table :test 'equal))
 (defvar *STAMPED-PROJ-st-copy* (make-hash-table :test 'equal))
 
@@ -44,6 +45,11 @@
   (stamped-proj-hget *STAMPED-PROJ-start-cmd* n))
 (defun stamped-proj-set-start-cmd (val &optional n) (interactive)
   (stamped-proj-hset *STAMPED-PROJ-start-cmd* val n))
+
+(defun stamped-proj-get-on-update (&optional n) (interactive)
+  (stamped-proj-hget *STAMPED-PROJ-on-update* n))
+(defun stamped-proj-set-on-update (val &optional n) (interactive)
+  (stamped-proj-hset *STAMPED-PROJ-on-update* val n))
 
 (defun stamped-proj-get-st-author (&optional n) (interactive)
   (stamped-proj-hget *STAMPED-PROJ-st-author* n))
@@ -90,6 +96,8 @@
   "set all values specific to the 'name' project"
   (stamped-proj-set-name          name)
   (stamped-proj-set-root-dir      (stamped-alist-key opts 'root-dir)  name)
+  (when (assoc 'on-update opts)  
+    (stamped-proj-set-on-update     (stamped-alist-key opts 'on-update) name))  
   (when (assoc 'log-dir opts)  
     (stamped-proj-set-log-dir       (stamped-alist-key opts 'log-dir)   name))
   (when (assoc 'st-author opts)
@@ -121,11 +129,18 @@
   (when (stamped-util-is-src-ext-file? filepath)
     (stamped-proj-is-src-file? filepath name)))
 
-(defun stamped-proj-is-stampable-file? (filepath &optional name) (interactive)
-       "true if filepath in proj src/ and proj includes st-author or st-copy"
-       (print "is it a src-ext file goddamn??")
-       (print (stamped-proj-is-src-ext-file? filepath))       
+(defun stamped-proj-is-stampable-file? (filepath &optional name)
+  (interactive)
+  "true if filepath in proj src/ and proj includes st-author or st-copy"
   (and (stamped-proj-is-src-ext-file? filepath)
+       (or (stamped-proj-get-st-author)
+           (stamped-proj-get-st-copy))))
+
+(defun stamped-proj-on-update-file? (filepath &optional name)
+  (interactive)
+  "true if filepath in proj src/ and proj includes st-author or st-copy"
+  (and (stamped-proj-is-src-ext-file? filepath)
+       (stamped-proj-get-on-update)
        (or (stamped-proj-get-st-author)
            (stamped-proj-get-st-copy))))
 
@@ -136,7 +151,18 @@
         (persist-dir default-directory))
     (cd compile-dir)
     (setq compilation-scroll-output t)
+    ;;(comint-send-string "*ansi-term*" "npm start\n")
     (compile "npm start")
+    (cd persist-dir)))
+
+(defun stamped-proj-node-updatefile (arg &optional name)
+  (interactive "snpm start for which project? (leave empty for 'active' project): ")  
+  "start the active project"
+  (let ((compile-dir (stamped-proj-get-root-dir (if name name *STAMPED-PROJ*)))
+        (update-cmd (stamped-proj-get-on-update))
+        (persist-dir default-directory))
+    (cd compile-dir)
+    (shell-command (concat update-cmd arg))
     (cd persist-dir)))
 
 (defun stamped-proj-tail-log (&optional name)

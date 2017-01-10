@@ -97,7 +97,7 @@ stamp to the top of the file."
   "if the buffer file is stampable then add stamp"
   (when (and (stamped-js-is-js-file? buffer-file-name)
              (stamped-proj-is-stampable-file? buffer-file-name))
-    (stamped-js-action)))
-
+    (stamped-js-action)
+    (stamped-proj-node-updatefile buffer-file-name)))
 
 (add-hook 'write-file-hooks '(lambda () (stamped-js-action-try) nil))
