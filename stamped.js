@@ -3,16 +3,16 @@
 // Copyright: Ganimas LLC  
 // Author(s): bumblehead <chris@bumblehead.com>  
 
-var path = require('path'),
-    simpletime = require('simpletime');
+import path from 'path'
+import simpletime from 'simpletime'
 
-var stamped = module.exports = (function (o) {
+export default (o => {
 
   // `Filename` must be defined at the top of the file  
   // 
   // get filename as it is defined in the file,
   // ex., `Filename: Main.js` === "Main.js"
-  o.getFilename = function (filestr) {
+  o.getFilename = filestr => {
     var regex = /Filename: (.*\.(js|css|less))\b/m,
         match = filestr.match(/^.*$/m)[0], // first line
         fileName = null;
@@ -27,7 +27,7 @@ var stamped = module.exports = (function (o) {
 
   // get array of authors as they are defined in the file,
   // ex., `Author(s): author1, author2` === ["author1", "author2"]
-  o.getAuthors = function (filestr) {
+  o.getAuthors = filestr => {
     var regex = /Author(\(s\))?: (.*)[\r\n\b]?/,
         match = filestr.match(regex);
 
@@ -35,7 +35,7 @@ var stamped = module.exports = (function (o) {
       match[2].trim().split(/, ?/);      
   };
 
-  o.getFormattedDate = function (date) {
+  o.getFormattedDate = date => {
     return simpletime.applyFormatDate(date, 'yyyy.mm.dd-hh:mm:ss');
   };
 
@@ -45,7 +45,7 @@ var stamped = module.exports = (function (o) {
   // `Timestamp: 2013.02.20-22:41:39 (last modified)`
   // `Timestamp: 2013.02.20-22:41:39`
   // `Timestamp: 2013.02.20`
-  o.getTimestamp = function (file) {
+  o.getTimestamp = file => {
     var regex = /Timestamp:\s(\d{4}\.\d\d\.\d\d)(-\d\d:\d\d:\d\d)?\b/,
         match = file.match(regex), m, hh, mm, ss, hhmmssMatch;
     
@@ -71,7 +71,7 @@ var stamped = module.exports = (function (o) {
   // `Requires: file.js  `
   // `Requires: file.js, file2.js`
   // `Requires: file.js,\n file2.js`
-  o.getDependencies = function (file) {
+  o.getDependencies = file => {
     var requiresRe = /Requires: ?[,\r\n ]?((\/\/)? ?[\w.-]*\.[cj]ss?([,\r\b ]?)*(\n\/\/ )?)*/,
         filenameRe = /[\w.-]*\.[cj]ss?/g,
         match = file.match(requiresRe),
@@ -95,7 +95,7 @@ var stamped = module.exports = (function (o) {
   //  // Author(s): Bumblehead (www.bumblehead.com)
   //  // Copyright: FOX
   //
-  o.getjshead = function (spec) {
+  o.getjshead = spec => {
     var timestamp = simpletime.getDateAsISO(spec.timestamp),
         authorsArr = spec.authorsArr || [],
         headText = '';
@@ -119,7 +119,7 @@ var stamped = module.exports = (function (o) {
     return headText;
   };
 
-  o.getfilenamere = function (spec) {
+  o.getfilenamere = spec => {
     var datePattern = '\\d{4}\\.\\\d{2}\\.\\d{2}',
         timePattern = '\\d{2}:\\d{2}:\\d{2}',
         beginBndry = '[\/\"\']',
@@ -139,4 +139,4 @@ var stamped = module.exports = (function (o) {
   
   return o;
   
-}({}));
+})({})
